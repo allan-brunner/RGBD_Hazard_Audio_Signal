@@ -1,8 +1,20 @@
+#include <condition_variable>
 #include <iostream>
 #include <librealsense2/hpp/rs_processing.hpp>
 #include <librealsense2/rs.hpp>
+#include <mutex>
+#include <queue>
+#include <thread>
 
-int main() try {
+struct HazardTarget {
+  float x, y, z;
+};
+
+std::queue<HazardTarget> hazard_queue;
+std::mutex mtx;
+std::condition_variable cv;
+
+void vision_loop() try {
   // Create a Pipeline - top-level API for streaming and processing frames
   rs2::pipeline pipe;
 
@@ -41,14 +53,52 @@ int main() try {
     std::cout << "Frame #" << depth.get_frame_number()
               << " - Center distance: " << dist_to_center << " meters\r"
               << std::flush;
+
+    HazardTarget current_hazard = {0, 1, 2};
+
+    // Safe push to audio thread
+    {
+      std::lock_guard<std::mutex> lock(mtx);
+      hazard_queue.push(current_hazard);
+    }
+    cv.notify_one();
   }
 
   std::cout << "\nDone.\n";
-  return EXIT_SUCCESS;
 } catch (const rs2::error &e) {
   std::cerr << "RealSense error calling " << e.get_failed_function() << "("
             << e.get_failed_args() << "):\n    " << e.what() << std::endl;
-  return EXIT_FAILURE;
+}
+
+void audio_loop() {
+  // Init things
+
+  // Loop
+  while (true) {
+    HazardTarget hazard;
+
+    // Wait safely fo ra coordinate
+    {
+      std::unique_lock<std::mutex> lock(mtx);
+      cv.wait(lock, [] { return !hazard_queue.empty(); });
+      hazard = hazard_queue.front();
+      hazard_queue.pop();
+    }
+  }
+
+  // Update the position
+
+  // Play the sound
+}
+
+int main() try {
+  std::thread vision_thread(vision_loop);
+  std::thread audio_thread(audio_loop);
+
+  vision_thread.join();
+  audio_thread.join();
+
+  return 0;
 } catch (const std::exception &e) {
   std::cerr << e.what() << std::endl;
   return EXIT_FAILURE;

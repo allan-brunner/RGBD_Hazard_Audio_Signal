@@ -3,22 +3,6 @@ Hazard recognition repo from RGBD camera
 
 ## How to use
 ### Setup
-#### Install librealsense
-
-On Arch:
-```bash
-yay -S librealsense
-```
-
-On Fedora:
-```bash
-sudo dnf install librealsense librealsense-devel python3-librealsense
-```
-
-On Ubuntu:
-```bash
-sudo apt install -y librealsense2-dkms librealsense2-utils librealsense2-dev
-```
 
 #### Clone
 Clone the repo:
@@ -54,25 +38,13 @@ On Ubuntu:
 sudo apt install cmake
 ```
 
+### Execute the script trought the container
 
-#### Prepare
-Create a build dir:
-```bash
-mkdir build
-```
+> If not on ARM64 setup, install QEMU Binfmt emulation:
+>
+> `docker run --privileged --rm tonistiigi/binfmt --install arm64`
 
-Specify the build directory:
+Run:
 ```bash
-cmake -B build
-```
-
-### Run
-Build the project:
-```bash
-cmake --build build
-```
-
-Run the project:
-```bash
-./build/bin/head_soft
+docker compose up -d
 ```

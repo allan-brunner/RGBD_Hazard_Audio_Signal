@@ -1,0 +1,42 @@
+services:
+  uno-q-sim:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    platform: linux/arm64
+    container_name: arduino_uno_q_sim
+    user: "arduino"
+    working_dir: /home/arduino/RGBD_Hazard_Audio_Signal
+
+    # Enforce Arduino UNO Q 4GB Hardware Constraints (4x Cortex-A53 @ 2.0GHz, 4GB LPDDR4)
+    deploy:
+      resources:
+        limits:
+          cpus: "4.0"
+          memory: 4G
+        reservations:
+          memory: 512M
+    mem_limit: 4g
+    memswap_limit: 4g
+    cpus: 4.0
+
+    # Privileged USB access for Intel RealSense D456 & host Bluetooth/Audio passthrough
+    privileged: true
+    network_mode: host
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
+
+    environment:
+      - PULSE_SERVER=unix:${XDG_RUNTIME_DIR:-/run/user/1000}/pulse/native
+
+    volumes:
+      - .:/home/arduino/RGBD_Hazard_Audio_Signal
+      - ${XDG_RUNTIME_DIR:-/run/user/1000}/pulse:${XDG_RUNTIME_DIR:-/run/user/1000}/pulse
+      - /var/run/dbus:/var/run/dbus
+
+    # Remove "--mock" once the physical Intel RealSense D456 is plugged into USB
+    command: >
+      bash -c "mkdir -p build && cd build &&
+               cmake -DCMAKE_BUILD_TYPE=Release .. &&
+               make -j4 &&
+               ./hazard_detector --mock"

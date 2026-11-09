@@ -50,8 +50,8 @@ RUN useradd -m -s /bin/bash -G plugdev,audio,video,sudo arduino && \
 USER arduino
 WORKDIR /home/arduino/RGBD_Hazard_Audio_Signal
 
-# Copy project files
-COPY --chown=arduino:arduino CMakeLists.txt main.cpp ./
+# Copy all project source and header files
+COPY --chown=arduino:arduino *.cpp *.hpp CMakeLists.txt ./
 
 # Build the C++ project targeting Cortex-A53
 RUN mkdir -p build && cd build && \

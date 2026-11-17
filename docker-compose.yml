@@ -37,6 +37,6 @@ services:
     # Remove "--mock" once the physical Intel RealSense D456 is plugged into USB
     command: >
       bash -c "mkdir -p build && cd build &&
-               cmake -DCMAKE_BUILD_TYPE=Release .. &&
-               make -j4 &&
-               ./hazard_detector --mock"
+              cmake -DCMAKE_BUILD_TYPE=Release .. &&
+              make -j4 &&
+              ./hazard_detector"

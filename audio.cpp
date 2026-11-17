@@ -13,7 +13,7 @@ void audio_loop() {
   std::cout << "[Audio] Worker started\n";
 
   while (g_is_running) {
-    HazardTarget hazard;
+    std::vector<HazardTarget> current_hazards;
 
     // Safely wait for a new coordinate from the Vision thread
     {
@@ -22,7 +22,7 @@ void audio_loop() {
       if (!g_is_running) {
         break;
       }
-      hazard = g_latest_hazard;
+      current_hazards = g_hazards;
       g_has_new_frame = false;
     }
 
@@ -31,7 +31,7 @@ void audio_loop() {
     // If hazard.detected is true, update 3D source position (hazard.x,
     // hazard.y, hazard.z) and trigger the audio alert
     // --------------------------------------------------------------------
-    (void)hazard;
+    (void)current_hazards;
   }
 
   // ------------------------------------------------------------------------

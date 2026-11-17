@@ -9,7 +9,7 @@
 // Define global shared variables
 std::mutex g_mtx;
 std::condition_variable g_cv;
-HazardTarget g_latest_hazard;
+std::vector<HazardTarget> g_hazards;
 bool g_has_new_frame = false;
 std::atomic<bool> g_is_running{true};
 

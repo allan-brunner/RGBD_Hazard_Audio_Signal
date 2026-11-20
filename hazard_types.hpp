@@ -13,6 +13,9 @@ struct HazardTarget {
   float y = 0.0f; // Vertical offset in meters (-down, +up)
   float z = 0.0f; // Forward distance in meters
   int frames_since_seen = 0;
+
+  int cx = 0;
+  int cy = 0;
 };
 
 // Shared state extern declarations

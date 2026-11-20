@@ -28,11 +28,13 @@ services:
 
     environment:
       - PULSE_SERVER=unix:${XDG_RUNTIME_DIR:-/run/user/1000}/pulse/native
+      - DISPLAY=${DISPLAY}
 
     volumes:
       - .:/home/arduino/RGBD_Hazard_Audio_Signal
       - ${XDG_RUNTIME_DIR:-/run/user/1000}/pulse:${XDG_RUNTIME_DIR:-/run/user/1000}/pulse
       - /var/run/dbus:/var/run/dbus
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
 
     # Remove "--mock" once the physical Intel RealSense D456 is plugged into USB
     command: >

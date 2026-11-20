@@ -73,18 +73,6 @@ scripts/bt_audio.sh connect XX:XX:XX:XX:XX:XX  # pair + connect + default output
 scripts/bt_audio.sh status
 ```
 
-### 2a. Test natively (fast, no camera libraries needed)
-
-```bash
-# Fedora: sudo dnf install openal-soft-devel   |   Debian: sudo apt install libopenal-dev
-cmake -B build-audio -DWITH_VISION=OFF
-cmake --build build-audio
-./build-audio/hazard_detector      # Ctrl+C to stop
-```
-
-Enable HRTF (3D sound for earphones) outside Docker:
-`printf '[general]\nhrtf = true\n' > ~/.alsoftrc`
-
 ### 2b. Test in the UNO Q simulation container
 
 ```bash

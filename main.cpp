@@ -1,8 +1,6 @@
 #include "audio.hpp"
 #include "hazard_types.hpp"
-#ifdef WITH_VISION
 #include "vision.hpp"
-#endif
 
 #include <csignal>
 #include <cstring>
@@ -12,7 +10,7 @@
 // Define global shared variables
 std::mutex g_mtx;
 std::condition_variable g_cv;
-HazardTarget g_latest_hazard;
+std::vector<HazardTarget> g_hazards;
 bool g_has_new_frame = false;
 std::atomic<bool> g_is_running{true};
 
@@ -34,16 +32,11 @@ int main(int argc, char **argv) try {
   std::thread audio_thread(audio_loop);
   std::thread vision_thread;
 
-#ifdef WITH_VISION
   if (!mock) {
     vision_thread = std::thread(vision_loop);
   } else {
     std::cout << "[Main] --mock: camera disabled, audio only\n";
   }
-#else
-  (void)mock;
-  std::cout << "[Main] Built without vision (WITH_VISION=OFF): audio only\n";
-#endif
 
   if (vision_thread.joinable()) {
     vision_thread.join();

@@ -166,7 +166,7 @@ void audio_loop() try {
     next_beep += kBeepPeriod;
 
     // ----------------------------------------------------------------------
-    // TODO (step 2): read g_latest_hazard here and adapt the beep rate /
+    // TODO (step 2): read g_hazards here and adapt the beep rate /
     // position (x, y, -z) to the detected hazard.
     // ----------------------------------------------------------------------
     std::unique_lock<std::mutex> lock(g_mtx);

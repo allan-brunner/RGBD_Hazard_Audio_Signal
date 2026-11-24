@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libssl-dev \
     libopencv-dev \
     libopenal-dev \
+    libalut-dev \
     pulseaudio-utils \
     libpulse0 \
     bluez \
